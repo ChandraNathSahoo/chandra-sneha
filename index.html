@@ -2559,7 +2559,7 @@
       <h2 id="rsvp-dialog-title">আপনি আসবেন কি?</h2>
       <form id="rsvp-form">
         <label class="form-field">আপনার নাম
-          <input type="text" name="name" required placeholder="আপনার পূর্ণ নাম লিখুন">
+          <input type="text" name="name" maxlength="100" required placeholder="আপনার পূর্ণ নাম লিখুন">
         </label>
 
         <label class="form-field">উপস্থিতি
@@ -2594,7 +2594,7 @@
         </label>
 
         <label class="form-field">নবদম্পতির জন্য শুভেচ্ছা বার্তা (ঐচ্ছিক)
-          <textarea name="message" rows="2" placeholder="আপনার আশীর্বাদ বা শুভেচ্ছা লিখুন..."></textarea>
+          <textarea name="message" rows="2" maxlength="490" placeholder="আপনার আশীর্বাদ বা শুভেচ্ছা লিখুন..."></textarea>
         </label>
 
         <button class="button" id="rsvp-submit-btn" type="submit">উত্তর পাঠান</button>
@@ -2847,7 +2847,48 @@
     }
   </style>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      initializeAppCheck,
+      ReCaptchaV3Provider
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-check.js";
+    import {
+      addDoc,
+      collection,
+      getFirestore,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    /* const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+      projectId: "chandra-weding",
+      appId: "YOUR_FIREBASE_APP_ID"
+    }; */
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9nxA7tjlamCkuhI2erYiyaFNIhQnGRo0",
+      authDomain: "chandra-weding.firebaseapp.com",
+      projectId: "chandra-weding",
+      storageBucket: "chandra-weding.firebasestorage.app",
+      messagingSenderId: "1089573887885",
+      appId: "1:1089573887885:web:8e7926d58667030e55a7c4"
+    };
+    const recaptchaSiteKey = "6Lc-czEuAAAAAGwqn2nx6PxIZS9kKaU0b5gPnP_7";
+    const firebaseConfigured = Object.values(firebaseConfig).every(
+      (value) => value && !value.startsWith("YOUR_")
+    );
+    const firebaseApp = firebaseConfigured ? initializeApp(firebaseConfig) : null;
+    if (firebaseApp && recaptchaSiteKey && !recaptchaSiteKey.startsWith("YOUR_")) {
+      initializeAppCheck(firebaseApp, {
+        provider: new ReCaptchaV3Provider(recaptchaSiteKey),
+        isTokenAutoRefreshEnabled: true
+      });
+    } else if (firebaseApp) {
+      console.warn("Firebase App Check is not configured. Add your reCAPTCHA v3 site key and enable App Check enforcement in Firebase Console.");
+    }
+    const db = firebaseApp ? getFirestore(firebaseApp) : null;
+
     const invitationCover = document.getElementById("invitation-cover");
     const invitationCard = invitationCover.querySelector(".cover-card");
     const heroTitle = document.querySelector(".hero-title");
@@ -3121,6 +3162,42 @@
     const rsvpSubmitBtn = document.getElementById("rsvp-submit-btn");
     const blessingsGrid = document.getElementById("blessings-grid");
 
+    const renderBlessing = ({ guestName, wishText, badgeText }) => {
+      const card = document.createElement("article");
+      card.className = "blessing-card";
+      card.dataset.firestoreWish = "true";
+
+      const p = document.createElement("p");
+      p.textContent = wishText;
+
+      const footerDiv = document.createElement("div");
+      footerDiv.className = "blessing-author";
+
+      const authorSpan = document.createElement("span");
+      authorSpan.textContent = `— ${guestName || "অতিথি"}`;
+
+      const badgeSpan = document.createElement("span");
+      badgeSpan.className = "blessing-badge";
+      badgeSpan.textContent = badgeText;
+
+      footerDiv.append(authorSpan, badgeSpan);
+      card.append(p, footerDiv);
+      blessingsGrid.prepend(card);
+    };
+
+    if (db) {
+      onSnapshot(collection(db, "wishes"), (snapshot) => {
+        blessingsGrid.querySelectorAll("[data-firestore-wish]").forEach((card) => card.remove());
+        snapshot.forEach((wishDocument) => renderBlessing(wishDocument.data()));
+      }, (error) => {
+        console.error("Could not load wishes from Firebase.", error);
+        showToast("শুভেচ্ছা বার্তা লোড করা যায়নি। পরে আবার চেষ্টা করুন।");
+      });
+    } else {
+      console.error("Firebase is not configured. Add your Firebase web app config to index.html.");
+      showToast("শুভেচ্ছা সংরক্ষণের জন্য Firebase সেটআপ প্রয়োজন।");
+    }
+
     document.getElementById("open-rsvp").addEventListener("click", () => {
       rsvpSubmitBtn.disabled = false;
       rsvpSubmitBtn.textContent = "উত্তর পাঠান";
@@ -3132,46 +3209,47 @@
       if (event.target === dialog) dialog.close();
     });
 
-    rsvpForm.addEventListener("submit", (event) => {
+    rsvpForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (!db) {
+        showToast("শুভেচ্ছা সংরক্ষণের জন্য Firebase সেটআপ প্রয়োজন।");
+        return;
+      }
+
       const formData = new FormData(rsvpForm);
       const guestName = String(formData.get("name") || "").trim();
       const attendance = formData.get("attendance");
       const customMessage = String(formData.get("message") || "").trim();
 
-      rsvpSubmitBtn.textContent = "ধন্যবাদ! উত্তর গৃহীত হয়েছে ✓";
-      rsvpSubmitBtn.disabled = true;
-      celebrateWithPetals(34);
+      if (!guestName) {
+        showToast("অনুগ্রহ করে আপনার নাম লিখুন।");
+        return;
+      }
 
-      if (guestName) {
-        const card = document.createElement("article");
-        card.className = "blessing-card";
-        const wishText = customMessage
+      const blessing = {
+        guestName,
+        wishText: customMessage
           ? `“${customMessage}”`
           : attendance === "yes"
             ? "“শুভ বিবাহের অনেক অনেক অভিনন্দন ও ভালোবাসা! উৎসবে দেখা হচ্ছে।”"
-            : "“দূর থেকেই নবদম্পতির জন্য রইল অফুরন্ত আশীর্বাদ ও শুভকামনা।”";
+            : "“দূর থেকেই নবদম্পতির জন্য রইল অফুরন্ত আশীর্বাদ ও শুভকামনা।”",
+        badgeText: attendance === "yes" ? "উপস্থিত থাকব" : "শুভকামনা"
+      };
 
-        const badgeText = attendance === "yes" ? "উপস্থিত থাকব" : "শুভকামনা";
-
-        const p = document.createElement("p");
-        p.textContent = wishText;
-
-        const footerDiv = document.createElement("div");
-        footerDiv.className = "blessing-author";
-
-        const nameSpan = document.createElement("span");
-        nameSpan.textContent = `— ${guestName}`;
-
-        const badgeSpan = document.createElement("span");
-        badgeSpan.className = "blessing-badge";
-        badgeSpan.textContent = badgeText;
-
-        footerDiv.append(nameSpan, badgeSpan);
-        card.append(p, footerDiv);
-        blessingsGrid.prepend(card);
+      rsvpSubmitBtn.textContent = "পাঠানো হচ্ছে…";
+      rsvpSubmitBtn.disabled = true;
+      try {
+        await addDoc(collection(db, "wishes"), blessing);
+      } catch (error) {
+        console.error("Could not save the wish to Firebase.", error);
+        rsvpSubmitBtn.disabled = false;
+        rsvpSubmitBtn.textContent = "উত্তর পাঠান";
+        showToast("আপনার শুভেচ্ছা সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।");
+        return;
       }
 
+      rsvpSubmitBtn.textContent = "ধন্যবাদ! উত্তর গৃহীত হয়েছে ✓";
+      celebrateWithPetals(34);
       setTimeout(() => {
         dialog.close();
         rsvpForm.reset();
