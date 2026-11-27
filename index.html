@@ -4158,6 +4158,7 @@ function onYouTubeIframeAPIReady() {
         }
     });
 }
+function petals(){for(let i=0;i<26;i++){const p=document.createElement("span");p.className="pt";p.textContent="✿";p.style.left=Math.random()*100+"%";p.style.fontSize=14+Math.random()*16+"px";p.style.setProperty("--d",Math.round(Math.random()*200-100)+"px");p.style.animationDuration=4+Math.random()*4+"s";p.style.animationDelay=Math.random()*1.5+"s";document.body.appendChild(p);p.onanimationend=()=>p.remove()}}
 
 // Open invitation and play music
 $("open").onclick = function () {
