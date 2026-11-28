@@ -3380,6 +3380,230 @@
     margin: 8px 0;
     overflow-wrap: anywhere;
 }
+
+/* FIXED ACCORDION OPEN/CLOSE */
+
+.event-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s ease;
+}
+
+.event-item.active .event-content {
+    grid-template-rows: 1fr;
+}
+
+.event-inner {
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Image sizing fix */
+.event-visual {
+    height: 250px;
+}
+
+.event-visual img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
+    display: block;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+    .event-visual {
+        height: 190px;
+    }
+}
+
+.guest-wishes {
+    padding: 75px 20px;
+    text-align: center;
+    background: linear-gradient(180deg, #fffaf5, #fff1e8);
+    position: relative;
+    overflow: hidden;
+}
+
+.wishes-decoration {
+    font-size: 35px;
+    color: #b88746;
+    margin-bottom: 12px;
+}
+
+.wishes-subtitle {
+    color: #a36d43;
+    font-size: 13px;
+    letter-spacing: 3px;
+}
+
+.guest-wishes h2 {
+    font-family: inherit;
+    color: #743b32;
+    font-size: clamp(25px, 5vw, 36px);
+    margin: 12px 0;
+}
+
+.wishes-intro {
+    max-width: 520px;
+    margin: 0 auto;
+    color: #856b60;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.wishes-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 25px 0;
+    padding: 9px 22px;
+    border: 1px solid #e5c8a8;
+    border-radius: 30px;
+    color: #975c42;
+    background: rgba(255,255,255,.7);
+    font-size: 14px;
+}
+
+.wishes-count span:first-child {
+    color: #b45b61;
+    font-size: 19px;
+}
+
+.wishes-list {
+    max-width: 650px;
+    max-height: 430px;
+    overflow-y: auto;
+    margin: 0 auto;
+    padding: 5px 12px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: #c69b75 #f8e8dc;
+}
+
+.wishes-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.wishes-list::-webkit-scrollbar-thumb {
+    background: #c69b75;
+    border-radius: 10px;
+}
+
+.wish-card {
+    position: relative;
+    text-align: left;
+    padding: 20px 22px;
+    background: rgba(255,255,255,.85);
+    border: 1px solid #ecd8c5;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(115, 65, 42, .06);
+    animation: wishAppear .5s ease;
+}
+
+.wish-card::before {
+    content: "❝";
+    position: absolute;
+    right: 17px;
+    top: 5px;
+    color: #e6c6a8;
+    font-size: 35px;
+}
+
+.wish-name {
+    color: #743b32;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.wish-message {
+    color: #79645a;
+    font-size: 14px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.wish-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    align-items: center;
+    margin-top: 12px;
+    color: #a47b60;
+    font-size: 11px;
+}
+
+.wish-status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #edf5e9;
+    color: #54814a;
+}
+
+.wish-status.absent {
+    background: #f9eceb;
+    color: #a65d58;
+}
+
+.no-wishes {
+    padding: 30px 15px;
+    color: #a27c65;
+}
+
+.no-wishes span {
+    font-size: 30px;
+}
+
+.no-wishes p {
+    margin: 10px 0 5px;
+}
+
+.no-wishes small {
+    font-size: 12px;
+}
+
+.wishes-bottom {
+    margin-top: 30px;
+    color: #a36d43;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.wishes-bottom span {
+    padding: 0 10px;
+}
+
+@keyframes wishAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media(max-width: 576px) {
+    .guest-wishes {
+        padding: 55px 12px;
+    }
+
+    .wishes-list {
+        max-height: 380px;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .wish-card {
+        padding: 17px;
+    }
+}
+
   
   </style>
 </head>
@@ -3416,14 +3640,11 @@
                     <strong>২৮ – ২৯ জানুয়ারি ২০২৭</strong>
                 </div>
 
-<!-- 
-                <button class="btn" id="open" type="button">
-                    আমন্ত্রণ খুলুন <span>♪</span>
-                </button> -->
 
-                <button class="btn" id="open" type="button">
-    আমন্ত্রণ খুলুন <span>♪</span>
-</button>
+             <button class="btn" id="open" type="button">
+        আমন্ত্রণ খুলুন <span>♪</span>
+      </button>
+
 
             </div>
         </div>
@@ -3487,14 +3708,8 @@
             </linearGradient>
         </defs>
     </svg>
-    <!-- <button id="snd" type="button" aria-label="সানাই চালু/বন্ধ">♪</button> -->
+    <button id="snd" type="button" aria-label="সানাই চালু/বন্ধ">♪</button>
 
-    <!-- YouTube Background Music -->
-<div id="youtubePlayer" style="position: fixed; left: -9999px; top: -9999px;">
-    <div id="ytPlayer"></div>
-</div>
-
-<script src="https://www.youtube.com/iframe_api"></script>
 
     <div class="top"><a href="#top" class="lg text-center">চন্দ্র ♥ স্নেহা</a>
        
@@ -3697,7 +3912,7 @@
                 <div class="event-inner">
 
                    <div class="event-visual reception-visual">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-KBCFqgZZdoNWp3O6_6aQjbdnEQ35mNzKhpE1abxAGwFg-YvArRPWSkc&s=10" alt="Wedding Reception">
+    <img src="assets/image/halud.jpeg" alt="Wedding Reception">
     <span class="visual-caption">A NIGHT OF HAPPINESS</span>
 </div>
 
@@ -3753,7 +3968,7 @@
                 <div class="event-inner">
 
                     <div class="event-visual reception-visual">
-    <img src="https://bongbride.wordpress.com/wp-content/uploads/2017/10/img_1098.jpg?w=1024" alt="Wedding Reception">
+    <img src="assets/image/weadding.png" alt="Wedding Reception">
     <span class="visual-caption">A NIGHT OF HAPPINESS</span>
 </div>
 
@@ -3809,7 +4024,7 @@
                 <div class="event-inner">
 
                    <div class="event-visual reception-visual">
-    <img src="https://i.pinimg.com/736x/5d/76/16/5d76169e9ead18ecfd6c0da352f1cdbf.jpg" alt="Wedding Reception">
+    <img src="assets/image/reception.png" alt="Wedding Reception">
     <span class="visual-caption">A NIGHT OF HAPPINESS</span>
 </div>
 
@@ -3871,12 +4086,37 @@
     উপস্থিতি নিশ্চিত করুন
 </button>
 
-<section class="guest-wishes">
-    <h2>আমাদের প্রিয়জনদের শুভেচ্ছা</h2>
-    <p>আপনাদের ভালোবাসা ও শুভেচ্ছায় আমাদের আনন্দ আরও বিশেষ</p>
+<section class="guest-wishes" id="guestWishes">
+    <div class="wishes-decoration">❀</div>
 
-    <div id="wishesList" class="wishes-list"></div>
+    <span class="wishes-subtitle">ভালোবাসা ও আশীর্বাদ</span>
+    <h2>শুভাকাঙ্ক্ষীদের শুভেচ্ছা</h2>
+
+    <p class="wishes-intro">
+        আপনাদের ভালোবাসা ও আশীর্বাদ আমাদের নতুন জীবনের
+        পথচলাকে আরও সুন্দর করে তুলবে।
+    </p>
+
+    <div class="wishes-count">
+        <span>♡</span>
+        <span id="wishesCount">০</span>
+        <span>টি শুভেচ্ছা</span>
+    </div>
+
+    <div class="wishes-list" id="wishesList">
+        <!-- Guest messages will appear here -->
+    </div>
+
+    <div class="no-wishes" id="noWishes">
+        <span>✿</span>
+        <p>এখনও কোনো শুভেচ্ছা আসেনি।</p>
+        <small>আপনার ভালোবাসার বার্তা দিয়ে শুরু করুন।</small>
+    </div>
+
+  
 </section>
+
+
     </section>
     <dialog id="dlg">
         <div class="di"><button class="xd" id="xd" type="button" aria-label="বন্ধ করুন">&times;</button>
@@ -3932,91 +4172,133 @@
         </p>
 
     </footer>
-    <div id="ytPlayer"></div>
-
-<script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
 
+document.addEventListener('DOMContentLoaded', function () {
 
-document.getElementById('frm').addEventListener('submit', function (e) {
-    e.preventDefault();
+    const dialog = document.getElementById('dlg');
+    const openBtn = document.getElementById('openRsvp');
+    const closeBtn = document.getElementById('xd');
+    const form = document.getElementById('frm');
 
-    const formData = new FormData(this);
+    const wishesList = document.getElementById('wishesList');
+    const wishesCount = document.getElementById('wishesCount');
+    const noWishes = document.getElementById('noWishes');
 
-    const name = formData.get('n');
-    const attendance = formData.get('a');
-    const guests = formData.get('g');
-    const message = formData.get('m');
+    let wishes = JSON.parse(localStorage.getItem('weddingWishes') || '[]');
 
-    // Show thank you message
-    document.getElementById('fm').hidden = true;
-    document.getElementById('ok').hidden = false;
+    // Bengali number conversion
+    function bengaliNumber(number) {
+        return String(number).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+    }
 
-    document.getElementById('okt').textContent =
-        'ধন্যবাদ ' + name + '! আপনার শুভেচ্ছা আমাদের কাছে বিশেষ।';
+    // Render all wishes
+    function renderWishes() {
 
-    // Create wish card
-    const card = document.createElement('div');
-    card.className = 'wish-card';
+        wishesList.innerHTML = '';
 
-    const title = document.createElement('h3');
-    title.textContent = name;
+        wishesCount.textContent = bengaliNumber(wishes.length);
 
-    const attendanceText = document.createElement('p');
-    attendanceText.textContent =
-        attendance === 'y'
-            ? '❤️ আনন্দের সঙ্গে উপস্থিত থাকবেন'
-            : '🙏 উপস্থিত থাকতে পারবেন না';
+        noWishes.style.display = wishes.length ? 'none' : 'block';
 
-    const guestText = document.createElement('p');
-    guestText.textContent = 'অতিথি সংখ্যা: ' + guests;
+        wishes.forEach(function (wish) {
 
-    const messageText = document.createElement('p');
-    messageText.textContent = message || 'শুভেচ্ছা ও ভালোবাসা ❤️';
+            const card = document.createElement('div');
+            card.className = 'wish-card';
 
-    card.append(title, attendanceText, guestText, messageText);
+            const name = document.createElement('div');
+            name.className = 'wish-name';
+            name.textContent = wish.name;
 
-    document.getElementById('wishesList').prepend(card);
-});
+            const message = document.createElement('div');
+            message.className = 'wish-message';
+            message.textContent = wish.message || 'নবদম্পতির জন্য অনেক শুভকামনা।';
 
+            const meta = document.createElement('div');
+            meta.className = 'wish-meta';
 
-document.addEventListener("DOMContentLoaded", function () {
+            const status = document.createElement('span');
+            status.className = 'wish-status' +
+                (wish.attendance === 'n' ? ' absent' : '');
 
-    const eventItems = document.querySelectorAll(".event-item");
+            status.textContent = wish.attendance === 'y'
+                ? 'আসবেন'
+                : 'আসতে পারবেন না';
 
-    eventItems.forEach((item) => {
+            const guests = document.createElement('span');
+            guests.textContent = wish.guests;
 
-        const header = item.querySelector(".event-header");
+            meta.append(status, guests);
 
-        header.addEventListener("click", function () {
+            card.append(name, message, meta);
 
-            const isActive = item.classList.contains("active");
+            wishesList.appendChild(card);
+        });
+    }
 
-            // Close all other events
-            eventItems.forEach((otherItem) => {
+    // Open dialog
+    openBtn.addEventListener('click', function () {
+        dialog.showModal();
+    });
 
-                otherItem.classList.remove("active");
+    // Close dialog
+    closeBtn.addEventListener('click', function () {
+        dialog.close();
+    });
 
-                otherItem.querySelector(".event-header")
-                    .setAttribute("aria-expanded", "false");
+    dialog.addEventListener('click', function (e) {
+        if (e.target === dialog) {
+            dialog.close();
+        }
+    });
 
-            });
+    // Submit RSVP
+    form.addEventListener('submit', function (e) {
 
-            // Open selected event
-            if (!isActive) {
+        e.preventDefault();
 
-                item.classList.add("active");
+        const name = this.elements['n'].value.trim();
+        const attendance = this.elements['a'].value;
+        const guests = this.elements['g'].value;
+        const message = this.elements['m'].value.trim();
 
-                header.setAttribute("aria-expanded", "true");
+        const newWish = {
+            name: name,
+            attendance: attendance,
+            guests: guests,
+            message: message
+        };
 
-            }
+        wishes.unshift(newWish);
 
+        localStorage.setItem(
+            'weddingWishes',
+            JSON.stringify(wishes)
+        );
+
+        renderWishes();
+
+        document.getElementById('fm').hidden = true;
+        document.getElementById('ok').hidden = false;
+
+        document.getElementById('okt').textContent =
+            name + ', আপনার উত্তর জানানোর জন্য আন্তরিক ধন্যবাদ!';
+
+        // Scroll to wishes section
+        document.getElementById('guestWishes').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
         });
 
     });
 
+    // Initial rendering
+    renderWishes();
+
 });
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const dialog = document.getElementById('dlg');
@@ -4132,65 +4414,116 @@ document.addEventListener('DOMContentLoaded', function () {
         tick(); setInterval(tick, 1000);
        
         /* sanai (synthesised with Web Audio, no files needed) */
-     let player;
-let playerReady = false;
-let musicStarted = false;
 
-const YOUTUBE_VIDEO_ID = "https://youtube.com/shorts/6DvpfKoM-x0?si=ZpWDHUG9levFZv_d";
+/* ======================================
+   TRADITIONAL BENGALI WEDDING SHEHNAI
+====================================== */
 
-// YouTube API
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player("ytPlayer", {
-        height: "0",
-        width: "0",
-        videoId: YOUTUBE_VIDEO_ID,
-        playerVars: {
-            autoplay: 0,
-            controls: 0,
-            loop: 1,
-            playlist: YOUTUBE_VIDEO_ID,
-            playsinline: 1
-        },
-        events: {
-            onReady: function () {
-                playerReady = true;
-            }
-        }
-    });
+const shehnai = new Audio("assets/audio/shehnai.mp3");
+
+shehnai.loop = true;
+shehnai.volume = 0.65;
+
+let musicPlaying = false;
+
+/* START MUSIC */
+async function start() {
+    try {
+        await shehnai.play();
+
+        musicPlaying = true;
+
+        $("snd").textContent = "♪";
+        $("snd").style.opacity = 1;
+
+    } catch (error) {
+        console.error("Shehnai playback error:", error);
+    }
 }
-function petals(){for(let i=0;i<26;i++){const p=document.createElement("span");p.className="pt";p.textContent="✿";p.style.left=Math.random()*100+"%";p.style.fontSize=14+Math.random()*16+"px";p.style.setProperty("--d",Math.round(Math.random()*200-100)+"px");p.style.animationDuration=4+Math.random()*4+"s";p.style.animationDelay=Math.random()*1.5+"s";document.body.appendChild(p);p.onanimationend=()=>p.remove()}}
 
-// Open invitation and play music
-$("open").onclick = function () {
+/* STOP MUSIC */
+function stop() {
+    shehnai.pause();
+
+    musicPlaying = false;
+
+    $("snd").textContent = "🔇";
+    $("snd").style.opacity = 0.7;
+}
+
+/* MUSIC BUTTON */
+$("snd").onclick = () => {
+    musicPlaying ? stop() : start();
+};
+
+/* OPEN INVITATION */
+$("open").onclick = () => {
 
     $("cover").classList.add("off");
 
+    start();
+
     petals();
-
-    if (playerReady) {
-        player.setVolume(70);
-        player.unMute();
-        player.playVideo();
-        musicStarted = true;
-    }
 };
 
-// Music toggle button
-$("snd").onclick = function () {
+/* PAUSE WHEN TAB IS HIDDEN */
+document.addEventListener("visibilitychange", () => {
 
-    if (!playerReady) return;
-
-    if (musicStarted) {
-        player.pauseVideo();
-        musicStarted = false;
-        $("snd").textContent = "🔇";
-    } else {
-        player.playVideo();
-        musicStarted = true;
-        $("snd").textContent = "♪";
+    if (document.hidden && musicPlaying) {
+        shehnai.pause();
+    } else if (!document.hidden && musicPlaying) {
+        shehnai.play().catch(() => {});
     }
-};
+
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const eventItems = document.querySelectorAll(".event-item");
+
+    eventItems.forEach(function (item) {
+
+        const header = item.querySelector(".event-header");
+
+        if (!header) return;
+
+        header.addEventListener("click", function () {
+
+            const isActive = item.classList.contains("active");
+
+            // Close all accordion items
+            eventItems.forEach(function (otherItem) {
+
+                otherItem.classList.remove("active");
+
+                const otherHeader = otherItem.querySelector(".event-header");
+
+                if (otherHeader) {
+                    otherHeader.setAttribute("aria-expanded", "false");
+                }
+
+            });
+
+            // Open clicked item if it was previously closed
+            if (!isActive) {
+
+                item.classList.add("active");
+
+                header.setAttribute("aria-expanded", "true");
+
+            }
+
+        });
+
+    });
+
+});
+
     </script>
+
+
 </body>
 
 </html>
